@@ -1,6 +1,6 @@
 {
   "name": "server-accepts-email",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "license": "MIT",
   "repository": "LinusU/server-accepts-email",
   "files": [
