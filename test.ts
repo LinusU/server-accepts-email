@@ -15,8 +15,6 @@ async function test () {
   assert.strictEqual(await serverAcceptsEmail('a        b@icloud.com'), false)
 
   assert.strictEqual(await serverAcceptsEmail('support@mail.ru'), true)
-  assert.strictEqual(await serverAcceptsEmail('6bJ4zsZHOE@mail.ru'), false)
-  assert.strictEqual(await serverAcceptsEmail('a        b@mail.ru'), false)
 
   assert.strictEqual(await serverAcceptsEmail('postmaster@yandex.com'), true)
   assert.strictEqual(await serverAcceptsEmail('6bJ4zsZHOE@yandex.com'), false)
