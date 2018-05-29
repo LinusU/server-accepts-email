@@ -1,0 +1,37 @@
+{
+  "name": "server-accepts-email",
+  "version": "0.0.0",
+  "license": "MIT",
+  "repository": "LinusU/server-accepts-email",
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "scripts": {
+    "test": "npm run prepare && node test",
+    "prepare": "tsc --lib es2017,esnext.asynciterable --target es2017 --module commonjs -d index.ts test.ts"
+  },
+  "dependencies": {
+    "async-lines": "^1.1.0",
+    "debug": "^3.1.0",
+    "p-catch-if": "^1.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^10.1.3",
+    "typescript": "^2.8.3"
+  },
+  "keywords": [
+    "check",
+    "email",
+    "existence",
+    "exists",
+    "smtp",
+    "validate",
+    "validation",
+    "validator",
+    "verify"
+  ],
+  "engines": {
+    "node": ">=8.0.0"
+  }
+}
