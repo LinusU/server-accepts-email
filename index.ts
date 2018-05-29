@@ -66,7 +66,10 @@ export = async function serverAcceptsEmail (email: string, { senderDomain = 'tes
         debug(`Waiting for greeting`)
         const response = await readResponse(lines)
 
-        if (response.code !== 220) throw new Error('Server did not respond with greeting')
+        if (response.code !== 220) {
+          debug(`Unexpected response: ${response.code} - ${response.comment}`)
+          throw new Error(`Unexpected code from server: ${response.code}`)
+        }
       }
 
       {
@@ -96,13 +99,33 @@ export = async function serverAcceptsEmail (email: string, { senderDomain = 'tes
         debug(`Waiting for server response`)
         const response = await readResponse(lines)
 
-        if (response.code === 550 || (response.code === 554 && response.comment.includes('this address does not exist'))) {
-          debug(`The mailbox is unavailable, cannot be found, or may not be accessed`)
+        if (response.code === 550) {
+          debug('The mailbox is unavailable')
           return false
         }
 
-        if (response.code === 553 || (response.code === 501 && response.comment.includes('Bad recipient address syntax'))) {
-          debug(`The mailbox name is not allowed due to invalid syntax`)
+        if (response.code === 553) {
+          debug('The mailbox name is not allowed')
+          return false
+        }
+
+        if (response.code === 554 && response.comment.includes('this address does not exist')) {
+          debug('The mailbox is unavailable (probably ProtonMail)')
+          return false
+        }
+
+        if (response.code === 501 && response.comment.includes('Bad recipient address syntax')) {
+          debug('The mailbox name is not allowed (probably ProtonMail)')
+          return false
+        }
+
+        if (response.code === 504 && response.comment.includes('Recipient address rejected')) {
+          debug('The mailbox name is not allowed (probably Yandex)')
+          return false
+        }
+
+        if (response.code === 501 && response.comment.includes(`<${email}>: `)) {
+          debug('The mailbox name is not allowed (probably Runbox)')
           return false
         }
 
