@@ -138,6 +138,11 @@ export = async function serverAcceptsEmail (email: string, options: { senderDoma
           return false
         }
 
+        if (response.code === 554 && response.comment.includes('Invalid-Recipient')) {
+          debug('The mailbox is unavailable (probably ESMTP Postfix)')
+          return false
+        }
+
         if (response.code !== 250) {
           debug(`Unexpected response: ${response.code} - ${response.comment}`)
           throw new Error(`Unexpected code from server: ${response.code}`)
