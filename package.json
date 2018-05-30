@@ -8,7 +8,7 @@
     "index.d.ts"
   ],
   "scripts": {
-    "test": "npm run prepare && node test",
+    "test": "npm run prepare && mocha",
     "prepare": "tsc --lib es2017,esnext.asynciterable --target es2017 --module commonjs -d index.ts test.ts"
   },
   "dependencies": {
@@ -17,7 +17,9 @@
     "p-catch-if": "^1.0.2"
   },
   "devDependencies": {
+    "@types/mocha": "^5.2.0",
     "@types/node": "^10.1.3",
+    "mocha": "^5.2.0",
     "typescript": "^2.8.3"
   },
   "keywords": [
