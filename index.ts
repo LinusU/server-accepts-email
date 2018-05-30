@@ -1,5 +1,6 @@
 import dns = require('dns')
 import net = require('net')
+import os = require('os')
 import util = require('util')
 
 import asyncLines = require('async-lines')
@@ -34,7 +35,7 @@ async function readResponse (lines: AsyncIterableIterator<string>) {
   return { code, comment }
 }
 
-export = async function serverAcceptsEmail (email: string, { senderDomain = 'test.example.com', senderAddress = 'test@example.com' } = {}) {
+export = async function serverAcceptsEmail (email: string, options: { senderDomain?: string, senderAddress?: string } = {}) {
   const server = email.split('@')[1]
 
   debug(`Resolving MX records for "${server}"`)
@@ -44,6 +45,9 @@ export = async function serverAcceptsEmail (email: string, { senderDomain = 'tes
   if (mxRecords.length === 0) {
     return false
   }
+
+  const senderDomain = (options.senderDomain || os.hostname())
+  const senderAddress = (options.senderAddress || `test@${senderDomain}`)
 
   /* https://en.wikipedia.org/wiki/MX_record#Priority
    * The MX priority determines the order in which the servers
@@ -73,7 +77,7 @@ export = async function serverAcceptsEmail (email: string, { senderDomain = 'tes
       }
 
       {
-        debug(`Sending "HELO" message`)
+        debug(`Sending "HELO ${senderDomain}" message`)
         connection.write(`HELO ${senderDomain}\r\n`)
 
         debug(`Waiting for server response`)
@@ -83,7 +87,7 @@ export = async function serverAcceptsEmail (email: string, { senderDomain = 'tes
       }
 
       {
-        debug(`Sending "MAIL FROM" message`)
+        debug(`Sending "MAIL FROM: <${senderAddress}>" message`)
         connection.write(`MAIL FROM: <${senderAddress}>\r\n`)
 
         debug(`Waiting for server response`)
@@ -93,7 +97,7 @@ export = async function serverAcceptsEmail (email: string, { senderDomain = 'tes
       }
 
       {
-        debug(`Sending "RCPT TO" message`)
+        debug(`Sending "RCPT TO: <${email}>" message`)
         connection.write(`RCPT TO: <${email}>\r\n`)
 
         debug(`Waiting for server response`)
