@@ -1,10 +1,12 @@
 import assert = require('assert')
+import isTravis = require('is-travis')
 import serverAcceptsEmail = require('./')
 
 describe('server-accepts-email', function () {
   this.timeout('30s')
 
   const senderDomain = process.env['TEST_SENDER_DOMAIN']
+  const skipOnTravis = (isTravis ? it.skip : it)
 
   it('gmail.com', async () => {
     assert.strictEqual(await serverAcceptsEmail('postmaster@gmail.com', { senderDomain }), true)
@@ -18,13 +20,13 @@ describe('server-accepts-email', function () {
     assert.strictEqual(await serverAcceptsEmail('a        b@protonmail.ch', { senderDomain }), false)
   })
 
-  it('icloud.com', async () => {
+  skipOnTravis('icloud.com', async () => {
     assert.strictEqual(await serverAcceptsEmail('postmaster@icloud.com', { senderDomain }), true)
     assert.strictEqual(await serverAcceptsEmail('6bJ4zsZHOE@icloud.com', { senderDomain }), false)
     assert.strictEqual(await serverAcceptsEmail('a        b@icloud.com', { senderDomain }), false)
   })
 
-  it('mail.ru', async () => {
+  skipOnTravis('mail.ru', async () => {
     assert.strictEqual(await serverAcceptsEmail('support@mail.ru', { senderDomain }), true)
   })
 
@@ -52,7 +54,7 @@ describe('server-accepts-email', function () {
     assert.strictEqual(await serverAcceptsEmail('a        b@zoho.eu', { senderDomain }), false)
   })
 
-  it('travisci.net', async () => {
+  skipOnTravis('oknotify2.com', async () => {
     assert.strictEqual(await serverAcceptsEmail('postmaster@oknotify2.com', { senderDomain }), true)
     assert.strictEqual(await serverAcceptsEmail('6bJ4zsZHOE@oknotify2.com', { senderDomain }), false)
     assert.strictEqual(await serverAcceptsEmail('a        b@oknotify2.com', { senderDomain }), false)
