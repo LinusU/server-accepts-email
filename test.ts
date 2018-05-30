@@ -32,6 +32,10 @@ async function test () {
   assert.strictEqual(await serverAcceptsEmail('6bJ4zsZHOE@zoho.eu'), false)
   assert.strictEqual(await serverAcceptsEmail('a        b@zoho.eu'), false)
 
+  assert.strictEqual(await serverAcceptsEmail('postmaster@oknotify2.com'), true)
+  assert.strictEqual(await serverAcceptsEmail('6bJ4zsZHOE@oknotify2.com'), false)
+  assert.strictEqual(await serverAcceptsEmail('a        b@oknotify2.com'), false)
+
   assert.strictEqual(await serverAcceptsEmail('linus@gp5uzpn2q7.com'), false)
 }
 

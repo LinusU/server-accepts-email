@@ -115,7 +115,7 @@ export = async function serverAcceptsEmail (email: string, { senderDomain = 'tes
         }
 
         if (response.code === 501 && response.comment.includes('Bad recipient address syntax')) {
-          debug('The mailbox name is not allowed (probably ProtonMail)')
+          debug('The mailbox name is not allowed (probably ProtonMail or ESMTP Postfix)')
           return false
         }
 
@@ -126,6 +126,11 @@ export = async function serverAcceptsEmail (email: string, { senderDomain = 'tes
 
         if (response.code === 501 && response.comment.includes(`<${email}>: `)) {
           debug('The mailbox name is not allowed (probably Runbox)')
+          return false
+        }
+
+        if (response.code === 450 && response.comment.includes('unknown user')) {
+          debug('The mailbox is unavailable (probably ESMTP Postfix)')
           return false
         }
 
