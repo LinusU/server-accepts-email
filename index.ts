@@ -38,7 +38,7 @@ export = async function serverAcceptsEmail (email: string, { senderDomain = 'tes
   const server = email.split('@')[1]
 
   debug(`Resolving MX records for "${server}"`)
-  const mxRecords = await resolveMx(server).catch(pCatchIf(err => err.code === 'ENOTFOUND', () => []))
+  const mxRecords = await resolveMx(server).catch(pCatchIf(err => (err.code === 'ENOTFOUND' || err.code === 'ENODATA'), () => []))
   debug(`Got ${mxRecords.length} record${mxRecords.length === 1 ? '' : 's'} for "${server}"`)
 
   if (mxRecords.length === 0) {
