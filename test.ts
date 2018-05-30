@@ -60,7 +60,7 @@ describe('server-accepts-email', function () {
     assert.strictEqual(await serverAcceptsEmail('a        b@oknotify2.com', { senderDomain }), false)
   })
 
-  it('tacobell.com', async () => {
+  skipOnTravis('tacobell.com', async () => {
     assert.strictEqual(await serverAcceptsEmail('6bJ4zsZHOE@tacobell.com', { senderDomain }), false)
     assert.strictEqual(await serverAcceptsEmail('a        b@tacobell.com', { senderDomain }), false)
   })
