@@ -65,6 +65,12 @@ describe('server-accepts-email', function () {
     assert.strictEqual(await serverAcceptsEmail('a        b@tacobell.com', { senderDomain }), false)
   })
 
+  it('myspace.com', async function () {
+    this.timeout('90s')
+
+    assert.strictEqual(await serverAcceptsEmail('postmaster@myspace.com', { senderDomain }), true)
+  })
+
   it('gp5uzpn2q7.com', async () => {
     assert.strictEqual(await serverAcceptsEmail('linus@gp5uzpn2q7.com', { senderDomain }), false)
   })
