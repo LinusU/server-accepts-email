@@ -34,17 +34,17 @@ console.log(await serverAcceptsEmail('linus@gp5uzpn2q7.se'))
 
 ## Other libraries
 
-There are some other libraries that does the same thing, but I found them to have some flaws which made me write this one.
+There are some other libraries that do the same thing, but I found them to have some flaws which made me write this one.
 
-&nbsp; | Promise API | Follows [RFC5321](https://tools.ietf.org/html/rfc5321) <sup>1</sup> | Proper Errors <sup>2</sup> | Hanles Greylisting <sup>3</sup>
+&nbsp; | Promise API | Follows [RFC5321](https://tools.ietf.org/html/rfc5321) <sup>1</sup> | Proper Errors <sup>2</sup> | Handles Greylisting <sup>3</sup>
 ----- | :---: | :---: | :---: | :---:
 **`server-accepts-email`** | ✅ | ✅ | ✅ | ✅
 [`email-exists`](https://github.com/scippio/email-existence) | ✅ | ❌ | ❌ | ❌
 [`email-existence`](https://github.com/MarkTiedemann/email-exists) | ❌ | ❌ | ❌ | ❌
 [`email-verify`](https://github.com/bighappyworld/email-verify) | ❌ | ❌ | ✅ | ❌
 
-<sup>1</sup> None of the other libraies parsed the replies to support multiline replies, but instead relied on every reply comming in a chunk, accepting all data and searching for substrings, or something similar.
+<sup>1</sup> None of the other libraries parsed the replies to support multiline replies but instead relied on every reply coming in a chunk, accepting all data and searching for substrings, or something similar.
 
-<sup>2</sup> Some of the other libraries rejects, or calls callback, with something other than an `Error` instance.
+<sup>2</sup> Some of the other libraries rejects, or calls the callback, with something other than an `Error` instance.
 
 <sup>3</sup> This library detects [Greylisting](https://en.wikipedia.org/wiki/Greylisting) and sends another request after the timeout has passed.
