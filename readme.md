@@ -37,7 +37,7 @@ console.log(await serverAcceptsEmail('linus@gp5uzpn2q7.se'))
 There are some other libraries that does the same thing, but I found them to have some flaws which made me write this one.
 
 &nbsp; | Promise API | Follows [RFC5321](https://tools.ietf.org/html/rfc5321) <sup>1</sup> | Proper Errors <sup>2</sup> | Hanles Greylisting <sup>3</sup>
------ | ----- | ----- | ----- | -----
+----- | :---: | :---: | :---: | :---:
 **`server-accepts-email`** | ✅ | ✅ | ✅ | ✅
 [`email-exists`](https://github.com/scippio/email-existence) | ✅ | ❌ | ❌ | ❌
 [`email-existence`](https://github.com/MarkTiedemann/email-exists) | ❌ | ❌ | ❌ | ❌
