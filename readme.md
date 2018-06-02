@@ -39,8 +39,8 @@ There are some other libraries that do the same thing, but I found them to have 
 &nbsp; | Promise API | Follows [RFC5321](https://tools.ietf.org/html/rfc5321) <sup>1</sup> | Proper Errors <sup>2</sup> | Handles Greylisting <sup>3</sup>
 ----- | :---: | :---: | :---: | :---:
 **`server-accepts-email`** | ✅ | ✅ | ✅ | ✅
-[`email-exists`](https://github.com/scippio/email-existence) | ✅ | ❌ | ❌ | ❌
-[`email-existence`](https://github.com/MarkTiedemann/email-exists) | ❌ | ❌ | ❌ | ❌
+[`email-exists`](https://github.com/MarkTiedemann/email-exists) | ✅ | ❌ | ❌ | ❌
+[`email-existence`](https://github.com/scippio/email-existence) | ❌ | ❌ | ❌ | ❌
 [`email-verify`](https://github.com/bighappyworld/email-verify) | ❌ | ❌ | ✅ | ❌
 
 <sup>1</sup> None of the other libraries parsed the replies to support multiline replies but instead relied on every reply coming in a chunk, accepting all data and searching for substrings, or something similar.
