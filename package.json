@@ -3,13 +3,14 @@
   "version": "1.4.2",
   "license": "MIT",
   "repository": "LinusU/server-accepts-email",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "files": [
-    "index.js",
-    "index.d.ts"
+    "build/"
   ],
   "scripts": {
     "test": "npm run prepare && mocha",
-    "prepare": "tsc --lib es2017,esnext.asynciterable --target es2017 --module commonjs -d index.ts test.ts"
+    "prepare": "tsc"
   },
   "dependencies": {
     "async-lines": "^1.1.0",

@@ -1,6 +1,8 @@
-import assert = require('assert')
-import isTravis = require('is-travis')
-import serverAcceptsEmail = require('./')
+/* eslint-env mocha */
+
+const assert = require('assert')
+const isTravis = require('is-travis')
+const serverAcceptsEmail = require('./')
 
 describe('server-accepts-email', function () {
   this.timeout('30s')
