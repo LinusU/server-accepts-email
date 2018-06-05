@@ -29,12 +29,12 @@ async function readResponse (lines: AsyncIterableIterator<string>) {
   return { code, comment }
 }
 
-export = class SMTPSocket {
+export default class Socket {
   private socket: net.Socket
   private lines: AsyncIterableIterator<string>
 
   static async connect (server: string) {
-    const self = new SMTPSocket(server)
+    const self = new Socket(server)
 
     try {
       debug(`Waiting for greeting`)

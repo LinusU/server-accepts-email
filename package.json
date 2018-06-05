@@ -16,7 +16,8 @@
     "async-lines": "^1.1.0",
     "debug": "^3.1.0",
     "p-catch-if": "^1.0.2",
-    "p-sleep": "^1.1.0"
+    "p-sleep": "^1.1.0",
+    "ts-resource-pool": "^1.0.0-alpha.2"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.0",
