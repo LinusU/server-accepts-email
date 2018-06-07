@@ -16,22 +16,14 @@ export type TestResult = (
 )
 
 export default class Client {
-  readonly serverPools: Map<string, ResourcePool<Socket>>
-  readonly senderDomain: string
+  private readonly pool: ResourcePool<Socket>
 
-  constructor (senderDomain) {
-    this.serverPools = new Map()
-    this.senderDomain = senderDomain
+  constructor (server: string, senderDomain: string) {
+    this.pool = new ResourcePool(new Factory(server, senderDomain), 5)
   }
 
-  test (server: string, email: string, { senderAddress }: TestOptions): Promise<TestResult> {
-    if (!this.serverPools.has(server)) {
-      this.serverPools.set(server, new ResourcePool(new Factory(server, this.senderDomain)))
-    }
-
-    const pool = this.serverPools.get(server)
-
-    return pool.use(async (connection) => {
+  test (email: string, { senderAddress }: TestOptions): Promise<TestResult> {
+    return this.pool.use(async (connection) => {
       let result: TestResult
 
       await connection.execute(`MAIL FROM: <${senderAddress}>`).then((response) => {

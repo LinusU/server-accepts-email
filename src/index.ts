@@ -7,20 +7,20 @@ import pCatchIf = require('p-catch-if')
 import pSleep = require('p-sleep')
 
 import Client from './client'
+import Manager from './manager'
 
 const debug = require('debug')('server-accepts-email') as (s: string) => void
 const resolveMx = util.promisify(dns.resolveMx)
 
+const globalManager = new Manager()
+
 interface TestServerOptions {
-  senderDomain: string
   senderAddress: string
   handleGraylisting: boolean
 }
 
-async function testServer (server: string, email: string, { senderDomain, senderAddress, handleGraylisting }: TestServerOptions) {
-  let client = new Client(senderDomain)
-
-  const result = await client.test(server, email, { senderAddress })
+async function testServer (client: Client, email: string, { senderAddress, handleGraylisting }: TestServerOptions) {
+  const result = await client.test(email, { senderAddress })
 
   if (result.kind === 'error') {
     throw result.error
@@ -33,7 +33,7 @@ async function testServer (server: string, email: string, { senderDomain, sender
 
     debug(`Waiting ${result.timeout} seconds for greylisting to pass`)
     return pSleep(result.timeout * 1000).then(() => {
-      return testServer(server, email, { senderDomain, senderAddress, handleGraylisting: false })
+      return testServer(client, email, { senderAddress, handleGraylisting: false })
     })
   }
 
@@ -61,12 +61,14 @@ export = async function serverAcceptsEmail (email: string, options: { senderDoma
    * first. Node, however, erroneously labels the preference number
    * "priority". Therefore, sort the addresses by priority in
    * ascending order, and then contact the first exchange. */
-  const sortedAddresses = mxRecords.sort((lhs, rhs) => lhs.priority - rhs.priority).map(a => a.exchange)
+  const sortedServers = mxRecords.sort((lhs, rhs) => lhs.priority - rhs.priority).map(a => a.exchange)
 
   let lastError: Error | null = null
-  for (const address of sortedAddresses) {
+  for (const server of sortedServers) {
     try {
-      return await testServer(address, email, { senderDomain, senderAddress, handleGraylisting: true })
+      return await globalManager.withClient(server, senderDomain, (client) => {
+        return testServer(client, email, { senderAddress, handleGraylisting: true })
+      })
     } catch (err) {
       debug(`Error "${err}", trying next server`)
       lastError = err
