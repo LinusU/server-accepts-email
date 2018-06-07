@@ -3,19 +3,21 @@
   "version": "1.4.2",
   "license": "MIT",
   "repository": "LinusU/server-accepts-email",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "files": [
-    "index.js",
-    "index.d.ts"
+    "build/"
   ],
   "scripts": {
     "test": "npm run prepare && mocha",
-    "prepare": "tsc --lib es2017,esnext.asynciterable --target es2017 --module commonjs -d index.ts test.ts"
+    "prepare": "tsc"
   },
   "dependencies": {
     "async-lines": "^1.1.0",
     "debug": "^3.1.0",
     "p-catch-if": "^1.0.2",
-    "p-sleep": "^1.1.0"
+    "p-sleep": "^1.1.0",
+    "ts-resource-pool": "^1.0.0-alpha.2"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.0",

@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es2017", "esnext.asynciterable"],
+    "module": "commonjs",
+    "outDir": "./build",
+    "target": "es2017"
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}

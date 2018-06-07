@@ -1,6 +1,8 @@
-import assert = require('assert')
-import isTravis = require('is-travis')
-import serverAcceptsEmail = require('./')
+/* eslint-env mocha */
+
+const assert = require('assert')
+const isTravis = require('is-travis')
+const serverAcceptsEmail = require('./')
 
 describe('server-accepts-email', function () {
   this.timeout('30s')
@@ -73,5 +75,45 @@ describe('server-accepts-email', function () {
 
   it('gp5uzpn2q7.com', async () => {
     assert.strictEqual(await serverAcceptsEmail('linus@gp5uzpn2q7.com', { senderDomain }), false)
+  })
+
+  it('pools connections', async () => {
+    const net = require('net')
+    const connect = net.connect
+
+    let totalConnections = 0
+    net.connect = (a, b, c) => { totalConnections++; return connect(a, b, c) }
+
+    try {
+      await Promise.all([
+        // Common names
+        serverAcceptsEmail('emma.smith@gmail.com').then((result) => assert.strictEqual(result, true)),
+        serverAcceptsEmail('liam.smith@gmail.com').then((result) => assert.strictEqual(result, true)),
+        serverAcceptsEmail('olivia.johnson@gmail.com').then((result) => assert.strictEqual(result, true)),
+        serverAcceptsEmail('noah.smith@gmail.com').then((result) => assert.strictEqual(result, true)),
+        serverAcceptsEmail('ava.smith@gmail.com').then((result) => assert.strictEqual(result, true)),
+        serverAcceptsEmail('william.johnson@gmail.com').then((result) => assert.strictEqual(result, true)),
+        serverAcceptsEmail('isabella.johnson@gmail.com').then((result) => assert.strictEqual(result, true)),
+        serverAcceptsEmail('james.johnson@gmail.com').then((result) => assert.strictEqual(result, true)),
+        serverAcceptsEmail('sophia.johnson@gmail.com').then((result) => assert.strictEqual(result, true)),
+        serverAcceptsEmail('logan.johnson@gmail.com').then((result) => assert.strictEqual(result, true)),
+
+        // Random strings
+        serverAcceptsEmail('nv8zoh3b0j@gmail.com').then((result) => assert.strictEqual(result, false)),
+        serverAcceptsEmail('y9mrigtum2@gmail.com').then((result) => assert.strictEqual(result, false)),
+        serverAcceptsEmail('rrfh9i3zxv@gmail.com').then((result) => assert.strictEqual(result, false)),
+        serverAcceptsEmail('l9u7edf7nt@gmail.com').then((result) => assert.strictEqual(result, false)),
+        serverAcceptsEmail('dj44oxs356@gmail.com').then((result) => assert.strictEqual(result, false)),
+        serverAcceptsEmail('b2ob70bh0v@gmail.com').then((result) => assert.strictEqual(result, false)),
+        serverAcceptsEmail('849esut58a@gmail.com').then((result) => assert.strictEqual(result, false)),
+        serverAcceptsEmail('0nvae3nrtf@gmail.com').then((result) => assert.strictEqual(result, false)),
+        serverAcceptsEmail('0c7i2f4nbf@gmail.com').then((result) => assert.strictEqual(result, false)),
+        serverAcceptsEmail('w5p6cvooc3@gmail.com').then((result) => assert.strictEqual(result, false))
+      ])
+    } finally {
+      net.connect = connect
+    }
+
+    assert.strictEqual(totalConnections, 5)
   })
 })
