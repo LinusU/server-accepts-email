@@ -22,10 +22,6 @@ interface TestServerOptions {
 async function testServer (client: Client, email: string, { senderAddress, handleGraylisting }: TestServerOptions) {
   const result = await client.test(email, { senderAddress })
 
-  if (result.kind === 'error') {
-    throw result.error
-  }
-
   if (result.kind === 'greylist') {
     if (!handleGraylisting) {
       throw new Error('Server applied greylisting')
