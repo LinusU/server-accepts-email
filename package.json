@@ -4,8 +4,9 @@
   "license": "MIT",
   "repository": "LinusU/server-accepts-email",
   "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "types": "index.d.ts",
   "files": [
+    "index.d.ts",
     "build/"
   ],
   "scripts": {
