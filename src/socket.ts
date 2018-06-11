@@ -3,7 +3,7 @@ import net = require('net')
 import asyncLines = require('async-lines')
 import pTimeout = require('p-timeout')
 
-const debug = require('debug')('server-accepts-email') as (s: string) => void
+const debug = require('debug')('server-accepts-email:socket') as (s: string) => void
 
 async function readLine (lines: AsyncIterableIterator<string>) {
   const { done, value } = await lines.next()
