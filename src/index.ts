@@ -10,7 +10,7 @@ import pSleep = require('p-sleep')
 import Client from './client'
 import Manager from './manager'
 
-const debug = require('debug')('server-accepts-email') as (s: string) => void
+const debug = require('debug')('server-accepts-email:index') as (s: string) => void
 
 const globalManager = new Manager()
 

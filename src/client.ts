@@ -3,7 +3,7 @@ import ResourcePool = require('ts-resource-pool')
 import Factory from './factory'
 import Socket from './socket'
 
-const debug = require('debug')('server-accepts-email') as (s: string) => void
+const debug = require('debug')('server-accepts-email:client') as (s: string) => void
 
 export interface TestOptions {
   senderAddress: string
@@ -22,7 +22,11 @@ export default class Client {
   }
 
   test (email: string, { senderAddress }: TestOptions): Promise<TestResult> {
+    debug(`Starting test of "${email}"`)
+
     return this.pool.use(async (connection): Promise<TestResult> => {
+      debug(`Aquired connection from pool`)
+
       await connection.execute(`MAIL FROM: <${senderAddress}>`).then((response) => {
         if (response.code !== 250) throw new Error(`Server did not accept sender address: ${senderAddress}`)
       })

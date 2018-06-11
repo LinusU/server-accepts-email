@@ -2,6 +2,8 @@ import ResourcePool = require('ts-resource-pool')
 
 import Socket from './socket'
 
+const debug = require('debug')('server-accepts-email:factory') as (s: string) => void
+
 export default class Factory implements ResourcePool.Factory<Socket> {
   readonly server: string
   readonly senderDomain: string
@@ -12,6 +14,8 @@ export default class Factory implements ResourcePool.Factory<Socket> {
   }
 
   async create () {
+    debug(`Creating connection to "${this.server}"`)
+
     const connection = await Socket.connect(this.server)
     const response = await connection.execute(`HELO ${this.senderDomain}`)
 
@@ -19,10 +23,14 @@ export default class Factory implements ResourcePool.Factory<Socket> {
       throw new Error(`Server did not accept sender domain: ${this.senderDomain}`)
     }
 
+    debug(`Connection to "${this.server}" established`)
+
     return connection
   }
 
   async destroy (connection, error) {
+    debug(`Terminating connection to "${this.server}"`)
+
     try {
       const response = await connection.execute('QUIT')
 
@@ -32,6 +40,8 @@ export default class Factory implements ResourcePool.Factory<Socket> {
     } finally {
       await connection.end()
     }
+
+    debug(`Connection to "${this.server}" terminated`)
   }
 
   async recycle (connection, error) {
@@ -40,11 +50,15 @@ export default class Factory implements ResourcePool.Factory<Socket> {
       return this.create()
     }
 
+    debug(`Preparing connection to "${this.server}" for reuse`)
+
     const response = await connection.execute('RSET')
 
     if (response.code !== 250) {
       throw new Error(`Server did not accept RSET command`)
     }
+
+    debug(`Ready to use connection to "${this.server}" again`)
 
     return connection
   }
