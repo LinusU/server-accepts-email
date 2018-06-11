@@ -35,7 +35,8 @@ export default class Factory implements ResourcePool.Factory<Socket> {
       const response = await connection.execute('QUIT')
 
       if (response.code !== 221) {
-        throw new Error('Server did not respond to "QUIT" command')
+        debug(`Unexpected response: ${response.code} - ${response.comment}`)
+        throw new Error(`Unexpected response code to QUIT command: ${response.code}`)
       }
     } finally {
       await connection.end()
