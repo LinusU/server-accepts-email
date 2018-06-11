@@ -20,7 +20,7 @@
     "p-limit": "^1.3.0",
     "p-sleep": "^1.1.0",
     "p-timeout": "^2.0.1",
-    "ts-resource-pool": "^1.0.0-alpha.2"
+    "ts-resource-pool": "^1.0.0-alpha.3"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.0",
