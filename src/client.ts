@@ -79,6 +79,11 @@ export default class Client {
         return { kind: 'answer', answer: false }
       }
 
+      if (response.code === 451 && response.comment.includes('Greylisting enabled, try again in 1 minutes')) {
+        this.debug('Server is applying greylisting, estimated wait time: 60s')
+        return { kind: 'greylist', timeout: 60 }
+      }
+
       if (response.code === 451 && response.comment.includes('https://community.mimecast.com/docs/DOC-1369#451')) {
         this.debug('Server is applying greylisting, estimated wait time: 60s')
         return { kind: 'greylist', timeout: 60 }
