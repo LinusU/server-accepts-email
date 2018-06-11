@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 
 const assert = require('assert')
+const assertRejects = require('assert-rejects')
 const isTravis = require('is-travis')
 const serverAcceptsEmail = require('./')
 
@@ -115,5 +116,26 @@ describe('server-accepts-email', function () {
     }
 
     assert.strictEqual(totalConnections, 5)
+  })
+
+  it('handles timeouts', async () => {
+    const net = require('net')
+    const connect = net.connect
+
+    const server = net.createServer()
+    const port = await new Promise(resolve => server.listen(0, () => resolve(server.address().port)))
+
+    /* Highjack connection */
+    net.connect = () => connect(port, '127.0.0.1')
+
+    try {
+      /* 123print.com only has one MX record */
+      await assertRejects(
+        serverAcceptsEmail('sv0qcfs28l@123print.com'),
+        /Timed out while waiting for response/
+      )
+    } finally {
+      server.close()
+    }
   })
 })
