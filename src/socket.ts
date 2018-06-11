@@ -1,5 +1,7 @@
 import net = require('net')
+
 import asyncLines = require('async-lines')
+import pTimeout = require('p-timeout')
 
 const debug = require('debug')('server-accepts-email') as (s: string) => void
 
@@ -29,6 +31,10 @@ async function readResponse (lines: AsyncIterableIterator<string>) {
   return { code, comment }
 }
 
+function readResponseWithTimeout (lines: AsyncIterableIterator<string>) {
+  return pTimeout(readResponse(lines), 15000, 'Timed out while waiting for response from server')
+}
+
 export default class Socket {
   private socket: net.Socket
   private lines: AsyncIterableIterator<string>
@@ -38,7 +44,7 @@ export default class Socket {
 
     try {
       debug(`Waiting for greeting`)
-      const response = await readResponse(self.lines)
+      const response = await readResponseWithTimeout(self.lines)
 
       if (response.code !== 220) {
         debug(`Unexpected response: ${response.code} - ${response.comment}`)
@@ -63,7 +69,7 @@ export default class Socket {
     this.socket.write(`${message}\r\n`)
 
     debug(`Waiting for server response`)
-    return readResponse(this.lines)
+    return readResponseWithTimeout(this.lines)
   }
 
   end () {
