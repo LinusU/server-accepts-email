@@ -34,7 +34,9 @@ export default class Factory implements ResourcePool.Factory<Socket> {
     try {
       const response = await connection.execute('QUIT')
 
-      if (response.code !== 221) {
+      if (response.code === 421) {
+        debug('Server sent 421 in response to QUIT, ignoring (probably ProtonMail)')
+      } else if (response.code !== 221) {
         debug(`Unexpected response: ${response.code} - ${response.comment}`)
         throw new Error(`Unexpected response code to QUIT command: ${response.code}`)
       }
