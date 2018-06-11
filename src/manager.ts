@@ -25,7 +25,7 @@ export default class Manager {
 
   private release (server: string, senderDomain: string) {
     const key = `${server} (from ${senderDomain})`
-    const item = this.storage.get(key)
+    const item = this.storage.get(key)!
 
     item.ref -= 1
 
@@ -34,7 +34,7 @@ export default class Manager {
     }
   }
 
-  async withClient<T> (server: string, senderDomain: string, fn: (Client) => T | PromiseLike<T>) {
+  async withClient<T> (server: string, senderDomain: string, fn: (client: Client) => T | PromiseLike<T>) {
     const client = this.aquire(server, senderDomain)
 
     return pTry(() => fn(client)).then(
