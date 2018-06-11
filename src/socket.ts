@@ -2,8 +2,7 @@ import net = require('net')
 
 import asyncLines = require('async-lines')
 import pTimeout = require('p-timeout')
-
-const debug = require('debug')('server-accepts-email:socket') as (s: string) => void
+import createDebug = require('debug')
 
 async function readLine (lines: AsyncIterableIterator<string>) {
   const { done, value } = await lines.next()
@@ -36,18 +35,19 @@ function readResponseWithTimeout (lines: AsyncIterableIterator<string>) {
 }
 
 export default class Socket {
-  private socket: net.Socket
-  private lines: AsyncIterableIterator<string>
+  private readonly debug: debug.IDebugger
+  private readonly lines: AsyncIterableIterator<string>
+  private readonly socket: net.Socket
 
   static async connect (server: string) {
     const self = new Socket(server)
 
     try {
-      debug(`Waiting for greeting`)
+      self.debug(`Waiting for greeting`)
       const response = await readResponseWithTimeout(self.lines)
 
       if (response.code !== 220) {
-        debug(`Unexpected response: ${response.code} - ${response.comment}`)
+        self.debug(`Unexpected response: ${response.code} - ${response.comment}`)
         throw new Error(`Unexpected code from server: ${response.code}`)
       }
     } catch (err) {
@@ -59,21 +59,27 @@ export default class Socket {
   }
 
   private constructor (server: string) {
-    debug(`Connecting to "${server}"`)
+    this.debug = createDebug(`server-accepts-email:socket:${server}`)
+
+    this.debug(`Connecting to "${server}"`)
     this.socket = net.connect(25, server)
+
     this.lines = asyncLines(this.socket)
   }
 
   async execute (message: string) {
-    debug(`Sending "${message}" message`)
+    this.debug(`Sending "${message}" message`)
     this.socket.write(`${message}\r\n`)
 
-    debug(`Waiting for server response`)
-    return readResponseWithTimeout(this.lines)
+    this.debug(`Waiting for server response`)
+    const response = await readResponseWithTimeout(this.lines)
+
+    this.debug(`Got response: ${response.code} - ${response.comment}`)
+    return response
   }
 
   end () {
-    debug('Closing connection')
+    this.debug('Closing connection')
     this.socket.end()
   }
 }
