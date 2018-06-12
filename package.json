@@ -30,6 +30,7 @@
     "assert-rejects": "^0.1.1",
     "is-travis": "^2.0.0",
     "mocha": "^5.2.0",
+    "node-memwatch": "^1.0.1",
     "typescript": "^2.8.3"
   },
   "keywords": [
