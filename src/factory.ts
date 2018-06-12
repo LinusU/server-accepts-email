@@ -1,7 +1,10 @@
 import createDebug = require('debug')
 import ResourcePool = require('ts-resource-pool')
+import Semaphore = require('ts-semaphore')
 
 import Socket from './socket'
+
+const globalLimit = new Semaphore(256)
 
 export default class Factory implements ResourcePool.Factory<Socket> {
   private readonly debug: debug.IDebugger
@@ -16,6 +19,8 @@ export default class Factory implements ResourcePool.Factory<Socket> {
 
   async create () {
     this.debug(`Creating connection`)
+
+    await globalLimit.aquire()
 
     const connection = await Socket.connect(this.server)
     const response = await connection.execute(`HELO ${this.senderDomain}`)
@@ -42,6 +47,7 @@ export default class Factory implements ResourcePool.Factory<Socket> {
         throw new Error(`Unexpected response code to QUIT command: ${response.code}`)
       }
     } finally {
+      globalLimit.release()
       await connection.end()
     }
 
