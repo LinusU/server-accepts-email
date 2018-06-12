@@ -22,16 +22,24 @@ export default class Factory implements ResourcePool.Factory<Socket> {
 
     await globalLimit.aquire()
 
-    const connection = await Socket.connect(this.server)
-    const response = await connection.execute(`HELO ${this.senderDomain}`)
+    try {
+      const connection = await Socket.connect(this.server)
 
-    if (response.code !== 250) {
-      throw new Error(`Server did not accept sender domain: ${this.senderDomain}`)
+      try {
+        const response = await connection.execute(`HELO ${this.senderDomain}`)
+        if (response.code !== 250) throw new Error(`Server did not accept sender domain: ${this.senderDomain}`)
+
+        this.debug(`Connection established`)
+
+        return connection
+      } catch (err) {
+        connection.end()
+        throw err
+      }
+    } catch (err) {
+      globalLimit.release()
+      throw err
     }
-
-    this.debug(`Connection established`)
-
-    return connection
   }
 
   async destroy (connection: Socket, error: Error | null) {
