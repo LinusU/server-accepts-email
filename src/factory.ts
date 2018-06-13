@@ -56,7 +56,7 @@ export default class Factory implements ResourcePool.Factory<Socket> {
       }
     } finally {
       globalLimit.release()
-      await connection.end()
+      connection.end()
     }
 
     this.debug(`Connection terminated`)
@@ -70,14 +70,20 @@ export default class Factory implements ResourcePool.Factory<Socket> {
 
     this.debug(`Preparing connection for reuse`)
 
-    const response = await connection.execute('RSET')
+    try {
+      const response = await connection.execute('RSET')
 
-    if (response.code !== 250) {
-      throw new Error(`Server did not accept RSET command`)
+      if (response.code !== 250) {
+        throw new Error(`Server did not accept RSET command`)
+      }
+
+      this.debug(`Ready to use connection again`)
+
+      return connection
+    } catch (err) {
+      globalLimit.release()
+      connection.end()
+      throw err
     }
-
-    this.debug(`Ready to use connection again`)
-
-    return connection
   }
 }
