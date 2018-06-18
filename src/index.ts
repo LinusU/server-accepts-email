@@ -15,23 +15,21 @@ const debug = require('debug')('server-accepts-email:index') as (s: string) => v
 const globalManager = new Manager()
 
 const resolveMx = util.promisify(dns.resolveMx)
-const resolveMxLimit = pLimit(256)
+const getMailServersLimit = pLimit(256)
 
 async function getMailServers (hostname: string): Promise<string[]> {
-  return resolveMxLimit(async () => {
-    debug(`Resolving MX records for "${hostname}"`)
-    const mxRecords = await resolveMx(hostname).catch(pCatchIf(err => (err.code === 'ENOTFOUND' || err.code === 'ENODATA'), () => []))
-    debug(`Got ${mxRecords.length} record${mxRecords.length === 1 ? '' : 's'} for "${hostname}"`)
+  debug(`Resolving MX records for "${hostname}"`)
+  const mxRecords = await resolveMx(hostname).catch(pCatchIf(err => (err.code === 'ENOTFOUND' || err.code === 'ENODATA'), () => []))
+  debug(`Got ${mxRecords.length} record${mxRecords.length === 1 ? '' : 's'} for "${hostname}"`)
 
-    /* https://en.wikipedia.org/wiki/MX_record#Priority
-    * The MX priority determines the order in which the servers
-    * are supposed to be contacted: The servers with the highest
-    * priority (and the lowest preference number) shall be tried
-    * first. Node, however, erroneously labels the preference number
-    * "priority". Therefore, sort the addresses by priority in
-    * ascending order, and then contact the first exchange. */
-    return mxRecords.sort((lhs, rhs) => lhs.priority - rhs.priority).map(a => a.exchange)
-  })
+  /* https://en.wikipedia.org/wiki/MX_record#Priority
+  * The MX priority determines the order in which the servers
+  * are supposed to be contacted: The servers with the highest
+  * priority (and the lowest preference number) shall be tried
+  * first. Node, however, erroneously labels the preference number
+  * "priority". Therefore, sort the addresses by priority in
+  * ascending order, and then contact the first exchange. */
+  return mxRecords.sort((lhs, rhs) => lhs.priority - rhs.priority).map(a => a.exchange)
 }
 
 interface TestServerOptions {
@@ -58,7 +56,7 @@ async function testServer (client: Client, email: string, { senderAddress, handl
 
 export = async function serverAcceptsEmail (email: string, options: { senderDomain?: string, senderAddress?: string } = {}) {
   const hostname = email.split('@')[1]
-  const servers = await getMailServers(hostname)
+  const servers = await getMailServersLimit(getMailServers, hostname)
 
   if (servers.length === 0) {
     return false
