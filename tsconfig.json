@@ -4,6 +4,7 @@
     "lib": ["es2017", "esnext.asynciterable"],
     "module": "commonjs",
     "outDir": "./build",
+    "strict": true,
     "target": "es2017"
   },
   "include": [
