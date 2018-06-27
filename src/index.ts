@@ -17,9 +17,11 @@ const globalManager = new Manager()
 const resolveMx = util.promisify(dns.resolveMx)
 const getMailServersLimit = pLimit(256)
 
+const handleResolveMxErrors = pCatchIf((err: Error & { code?: string }) => (err.code === 'ENOTFOUND' || err.code === 'ENODATA'), () => [] as dns.MxRecord[])
+
 async function getMailServers (hostname: string): Promise<string[]> {
   debug(`Resolving MX records for "${hostname}"`)
-  const mxRecords = await resolveMx(hostname).catch(pCatchIf(err => (err.code === 'ENOTFOUND' || err.code === 'ENODATA'), () => []))
+  const mxRecords = await resolveMx(hostname).catch(handleResolveMxErrors)
   debug(`Got ${mxRecords.length} record${mxRecords.length === 1 ? '' : 's'} for "${hostname}"`)
 
   /* https://en.wikipedia.org/wiki/MX_record#Priority
@@ -37,7 +39,7 @@ interface TestServerOptions {
   handleGraylisting: boolean
 }
 
-async function testServer (client: Client, email: string, { senderAddress, handleGraylisting }: TestServerOptions) {
+async function testServer (client: Client, email: string, { senderAddress, handleGraylisting }: TestServerOptions): Promise<boolean> {
   const result = await client.test(email, { senderAddress })
 
   if (result.kind === 'greylist') {
