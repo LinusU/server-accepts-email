@@ -5,6 +5,6 @@ declare namespace serverAcceptsEmail {
   }
 }
 
-declare function serverAcceptsEmail (email: string, options?: serverAcceptsEmail.Options)
+declare function serverAcceptsEmail (email: string, options?: serverAcceptsEmail.Options): Promise<boolean>
 
 export = serverAcceptsEmail
