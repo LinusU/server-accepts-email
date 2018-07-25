@@ -1,6 +1,6 @@
 {
   "name": "server-accepts-email",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "license": "MIT",
   "repository": "LinusU/server-accepts-email",
   "main": "build/index.js",
