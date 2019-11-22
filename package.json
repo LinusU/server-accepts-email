@@ -25,15 +25,15 @@
   },
   "devDependencies": {
     "@types/debug": "0.0.30",
-    "@types/mocha": "^5.2.2",
+    "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.5",
     "@types/p-catch-if": "^1.0.0",
     "@types/p-limit": "^2.0.0",
     "@types/p-timeout": "^1.2.0",
     "@types/p-try": "^2.0.0",
-    "assert-rejects": "^0.1.1",
+    "assert-rejects": "^1.0.0",
     "is-travis": "^2.0.0",
-    "mocha": "^5.2.0",
+    "mocha": "^6.2.2",
     "node-memwatch": "^1.0.1",
     "ts-readme-generator": "^0.1.2",
     "typescript": "^3.7.2"
