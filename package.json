@@ -1,17 +1,28 @@
 {
   "name": "server-accepts-email",
   "version": "1.11.1",
-  "license": "MIT",
+  "keywords": [
+    "check",
+    "email",
+    "existence",
+    "exists",
+    "smtp",
+    "validate",
+    "validation",
+    "validator",
+    "verify"
+  ],
   "repository": "LinusU/server-accepts-email",
-  "main": "build/index.js",
-  "types": "index.d.ts",
+  "license": "MIT",
   "files": [
     "index.d.ts",
     "build/"
   ],
+  "main": "build/index.js",
+  "types": "index.d.ts",
   "scripts": {
-    "test": "npm run prepare && mocha && ts-readme-generator --check",
-    "prepare": "tsc"
+    "prepare": "tsc",
+    "test": "npm run prepare && mocha && ts-readme-generator --check"
   },
   "dependencies": {
     "async-lines": "^1.1.0",
@@ -38,17 +49,6 @@
     "ts-readme-generator": "^0.1.2",
     "typescript": "^3.7.2"
   },
-  "keywords": [
-    "check",
-    "email",
-    "existence",
-    "exists",
-    "smtp",
-    "validate",
-    "validation",
-    "validator",
-    "verify"
-  ],
   "engines": {
     "node": ">=8.0.0"
   }
