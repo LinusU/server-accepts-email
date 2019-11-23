@@ -25,12 +25,13 @@ console.log(await serverAcceptsEmail('linus@gp5uzpn2q7.se'))
 
 ## API
 
-### `serverAcceptsEmail(email[, options]): Promise<boolean>`
+### `serverAcceptsEmail(email[, options])`
 
-- `email` (string, required) - Email address to test
-- `options` (object, optional)
-  - `senderDomain` (string, optional) - Domain to identify as (in `HELO` smtp command)
-  - `senderAddress` (string, optional) - Email address to identify as (in `MAIL FROM` command)
+- `email` (`string`, required) - Email address to test
+- `options` (`object`, optional)
+  - `senderDomain` (`string`, optional) - Domain to identify as (in `HELO` smtp command)
+  - `senderAddress` (`string`, optional) - Email address to identify as (in `MAIL FROM` command)
+- returns `Promise<boolean>` - Wether or not email is accepted for the given address
 
 ## Other libraries
 
