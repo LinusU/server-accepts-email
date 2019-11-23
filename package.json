@@ -1,17 +1,28 @@
 {
   "name": "server-accepts-email",
   "version": "1.11.1",
-  "license": "MIT",
+  "keywords": [
+    "check",
+    "email",
+    "existence",
+    "exists",
+    "smtp",
+    "validate",
+    "validation",
+    "validator",
+    "verify"
+  ],
   "repository": "LinusU/server-accepts-email",
-  "main": "build/index.js",
-  "types": "index.d.ts",
+  "license": "MIT",
   "files": [
     "index.d.ts",
     "build/"
   ],
+  "main": "build/index.js",
+  "types": "index.d.ts",
   "scripts": {
-    "test": "npm run prepare && mocha",
-    "prepare": "tsc"
+    "prepare": "tsc",
+    "test": "npm run prepare && mocha && ts-readme-generator --check"
   },
   "dependencies": {
     "async-lines": "^1.1.0",
@@ -25,29 +36,19 @@
   },
   "devDependencies": {
     "@types/debug": "0.0.30",
-    "@types/mocha": "^5.2.2",
-    "@types/node": "^10.3.3",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.5",
     "@types/p-catch-if": "^1.0.0",
     "@types/p-limit": "^2.0.0",
     "@types/p-timeout": "^1.2.0",
     "@types/p-try": "^2.0.0",
-    "assert-rejects": "^0.1.1",
+    "assert-rejects": "^1.0.0",
     "is-travis": "^2.0.0",
-    "mocha": "^5.2.0",
+    "mocha": "^6.2.2",
     "node-memwatch": "^1.0.1",
-    "typescript": "^2.9.2"
+    "ts-readme-generator": "^0.1.2",
+    "typescript": "^3.7.2"
   },
-  "keywords": [
-    "check",
-    "email",
-    "existence",
-    "exists",
-    "smtp",
-    "validate",
-    "validation",
-    "validator",
-    "verify"
-  ],
   "engines": {
     "node": ">=8.0.0"
   }

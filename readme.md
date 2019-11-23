@@ -25,7 +25,7 @@ console.log(await serverAcceptsEmail('linus@gp5uzpn2q7.se'))
 
 ## API
 
-### `serverAcceptsEmail(email[, options]) => Promise<boolean>`
+### `serverAcceptsEmail(email[, options]): Promise<boolean>`
 
 - `email` (string, required) - Email address to test
 - `options` (object, optional)
